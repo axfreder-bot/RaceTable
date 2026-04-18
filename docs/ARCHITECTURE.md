@@ -87,3 +87,96 @@ Dishes get a 1-5 paw score based on:
 - **Processed foods** (penalty)
 
 Formula: weighted sum normalized to 1-5 scale, rounded to nearest integer.
+
+---
+
+## Backend Architecture
+
+RaceTable uses a multi-backend strategy: Firebase for auth + user data, a Cloudflare Worker for restaurant search, and local seed data as fallback.
+
+### Architecture Diagram
+
+```
+┌─────────────────────────┐     ┌──────────────────────────────────┐
+│   RaceTable Mobile App  │────▶│         Firebase                 │
+│                         │     │  ┌─────────────┐  ┌───────────┐ │
+│  ┌───────────────────┐  │     │  │ Auth        │  │ Firestore  │ │
+│  │ AuthScreen        │  │     │  │ (email+goog) │  │ (user data)│ │
+│  │ AppNavigator       │  │     │  └─────────────┘  └───────────┘ │
+│  │ useAuth hook      │  │     │                                  │
+│  │ useRestaurants    │  │     └──────────────────────────────────┘
+│  │ useSupplementInv  │  │
+│  └───────────────────┘  │
+│         │              │     ┌──────────────────────────────────┐
+│  (falls back to seed)  │────▶│   Cloudflare Worker              │
+│                         │     │   racetable-places-proxy          │
+│                         │     │   - Google Places API proxy       │
+└─────────────────────────┘     │   - KV cache (1hr TTL)           │
+                                │   - Hides API keys                │
+                                └──────────────────────────────────┘
+```
+
+### Firebase (Auth + Firestore)
+
+**Purpose**: User authentication and persistent user data.
+
+- **Authentication**: Email/password + Google sign-in via `@react-native-firebase/auth`
+- **Firestore collections**:
+  - `users/{uid}/inventory` — supplement inventory (hasSupplement[], doesNotTake[], weeklyOrderList[])
+  - `users/{uid}/meals` — saved meal plans
+  - `users/{uid}/checkins` — daily check-in history
+  - `restaurants/{id}` — restaurant master data (admin-managed)
+
+**Why Firebase?** Native React Native SDK, excellent offline support with local persistence, works well with Expo and bare React Native, generous free tier (10K monthly active users).
+
+### Cloudflare Worker (Places Proxy)
+
+**Purpose**: Proxy Google Places API without exposing API keys in the mobile app.
+
+- Endpoint: `https://racetable-places-proxy.<username>.workers.dev/?lat=XX&lng=YY&query=restaurant`
+- Fetches from Google Places Nearby Search + Text Search
+- Caches results in Cloudflare KV for 1 hour
+- Returns normalized `PlaceResult[]` JSON
+
+**Why a Worker?** Keeps Google Places API key server-side. Prevents key theft from app binary decompilation. Also handles CORS and response normalization.
+
+**Deploy steps**:
+```bash
+cd cloudflare/racetable-places-proxy
+npx wrangler kv:namespace create "PLACES_CACHE"   # copy the ID into wrangler.toml
+npx wrangler secret put GOOGLE_PLACES_API_KEY     # paste the key
+npx wrangler deploy
+```
+
+### Seed Data Fallback Strategy
+
+The app is designed to work in three modes:
+
+| Mode | Firebase | Places API | Behavior |
+|------|----------|------------|----------|
+| **Full** | ✅ Configured | ✅ Deployed | Cloud auth + real restaurants |
+| **Partial** | ✅ Configured | ❌ Missing | Cloud auth + local seed restaurants |
+| **Demo** | ❌ Not configured | ❌ Missing | Auth screen (demo mode) + local seed |
+
+This ensures the app is always testable even before full backend setup.
+
+### Data Flow (Authenticated)
+
+```
+1. User signs in → Firebase Auth returns uid
+2. useSupplementInventory loads user's supplement list from Firestore
+3. useRestaurants loads restaurants (Firestore → fallback to seed)
+4. User selects restaurant → dishes shown (from seed or Firestore)
+5. User updates supplement inventory → saved to Firestore
+6. App is offline-capable (Firebase SDK handles local persistence)
+```
+
+### Environment Configuration
+
+Firebase config lives in `src/firebase/config.ts` with `TODO_FILL_IN` placeholders. After creating the Firebase project, Alex updates these from `GoogleService-Info.plist`.
+
+Cloudflare Worker uses `wrangler secrets` for the Google Places API key — never committed to the repo.
+
+---
+
+_Last updated: Phase 3 (Firebase + Cloudflare Worker integration)_
