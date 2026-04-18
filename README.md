@@ -1,79 +1,57 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# RaceTable
 
-# Getting Started
+A daily nutrition companion app for marathon trainers who eat out frequently.
+Built with React Native 0.74.x + TypeScript.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## App Overview
 
-## Step 1: Start the Metro Server
+RaceTable helps marathon trainers manage their nutrition on the go. Whether you're traveling for work or just eating out often, RaceTable gives you personalized meal recommendations based on your training load, goals, and dietary preferences. Start each day with a quick morning check-in, get a full nutrition plan tailored to your training, and lookup restaurant dishes with training fit scores so you can make smart choices even when you're eating out.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Features
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- **Morning Check-in**: Log your planned workout and how you're feeling to get a personalized nutrition recommendation for the day
+- **Full Day Nutrition Plan**: Get macronutrient targets (carbs, protein, fat) and meal timing recommendations based on your training schedule
+- **Restaurant Dish Lookup**: Look up common restaurant dishes and see how they fit your training goals with a training fit score (1-5 paws 🐾)
+- **Supplement Timing Recommendations**: Know exactly when to take your supplements (caffeine, electrolytes, beta-alanine, etc.) for maximum benefit
+- **Race Countdown + Training Plan**: See days until your next race and follow a structured training plan with nutrition windows built in
 
-```bash
-# using npm
-npm start
+## Tech Stack
 
-# OR using Yarn
-yarn start
-```
+- React Native 0.74.x
+- TypeScript
+- React Navigation 6
+- Hermes engine
 
-## Step 2: Start your Application
+## Screenshots
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+(TODO: add screenshots later)
 
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
+## Getting Started
 
 ```bash
-# using npm
+git clone https://github.com/axfreder-bot/RaceTable.git
+cd RaceTable
+npm install
+cd ios && pod install && cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## Architecture
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```
+src/
+├── components/     # Reusable UI components (MealCard, FitScoreBadge, etc.)
+├── data/           # Seed data: dishes, restaurants, supplements
+├── hooks/          # Custom hooks (useNutrition, useRaceCountdown, etc.)
+├── navigation/     # React Navigation setup and route types
+├── screens/         # Main app screens (Home, RestaurantLookup, etc.)
+├── theme/          # Colors, typography, spacing constants
+├── types/          # TypeScript interfaces for data models
+└── utils/          # Helper functions (nutrition math, date utils)
+```
 
-## Step 3: Modifying your App
+Data flows from seed data through hooks into screens. Navigation is handled by React Navigation 6 with a bottom tab structure. Local seed data is used first to keep the app functional offline; Firebase is planned for future sync and cloud storage.
 
-Now that you have successfully run the app, let's modify it.
+## License
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+MIT

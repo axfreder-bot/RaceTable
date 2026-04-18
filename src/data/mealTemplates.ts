@@ -1,0 +1,100 @@
+import {MealTemplate} from '../types';
+
+export const mealTemplates: MealTemplate[] = [
+  {
+    key: 'breakfast-base',
+    name: 'Breakfast',
+    moment: 'breakfast',
+    time: '7:00 AM',
+    proteinGrams: 30,
+    carbsGrams: 50,
+    fatGrams: 15,
+    calories: 455,
+    foodOptions: [
+      {name: 'Oatmeal with banana', servings: 1, protein: 8, carbs: 45, fat: 5, calories: 245},
+      {name: 'Greek yogurt', servings: 1, protein: 15, carbs: 8, fat: 3, calories: 110},
+      {name: 'Scrambled eggs (3)', servings: 1, protein: 18, carbs: 2, fat: 12, calories: 180},
+      {name: 'Blueberries', servings: 0.5, protein: 0.5, carbs: 10, fat: 0, calories: 40},
+    ],
+  },
+  {
+    key: 'pre-run-snack',
+    name: 'Pre-Run Fuel',
+    moment: 'pre-run',
+    time: '8:30 AM',
+    proteinGrams: 5,
+    carbsGrams: 45,
+    fatGrams: 3,
+    calories: 210,
+    foodOptions: [
+      {name: 'Banana', servings: 1, protein: 1, carbs: 27, fat: 0, calories: 105},
+      {name: 'Toast with jam', servings: 1, protein: 2, carbs: 22, fat: 1, calories: 100},
+      {name: 'Energy gel', servings: 1, protein: 0, carbs: 25, fat: 0, calories: 100},
+    ],
+  },
+  {
+    key: 'post-run-recovery',
+    name: 'Post-Run Recovery',
+    moment: 'post-run',
+    time: '10:00 AM',
+    proteinGrams: 35,
+    carbsGrams: 60,
+    fatGrams: 10,
+    calories: 470,
+    foodOptions: [
+      {name: 'Chocolate milk', servings: 1, protein: 8, carbs: 26, fat: 8, calories: 200},
+      {name: 'Recovery bar', servings: 1, protein: 20, carbs: 30, fat: 5, calories: 250},
+      {name: 'Bagel with peanut butter', servings: 1, protein: 10, carbs: 40, fat: 8, calories: 280},
+    ],
+  },
+  {
+    key: 'lunch-base',
+    name: 'Lunch',
+    moment: 'lunch',
+    time: '12:30 PM',
+    proteinGrams: 40,
+    carbsGrams: 55,
+    fatGrams: 18,
+    calories: 542,
+    foodOptions: [
+      {name: 'Grilled chicken breast', servings: 1, protein: 35, carbs: 0, fat: 4, calories: 165},
+      {name: 'Brown rice', servings: 1.5, protein: 4, carbs: 40, fat: 1, calories: 180},
+      {name: 'Steamed vegetables', servings: 1, protein: 3, carbs: 10, fat: 0, calories: 50},
+      {name: 'Avocado', servings: 0.5, protein: 1, carbs: 5, fat: 10, calories: 110},
+    ],
+  },
+  {
+    key: 'dinner-base',
+    name: 'Dinner',
+    moment: 'dinner',
+    time: '7:00 PM',
+    proteinGrams: 45,
+    carbsGrams: 50,
+    fatGrams: 20,
+    calories: 540,
+    foodOptions: [
+      {name: 'Salmon fillet', servings: 1, protein: 35, carbs: 0, fat: 12, calories: 250},
+      {name: 'Sweet potato', servings: 1, protein: 2, carbs: 30, fat: 0, calories: 130},
+      {name: 'Mixed green salad', servings: 1, protein: 2, carbs: 5, fat: 3, calories: 45},
+      {name: 'Olive oil dressing', servings: 1, protein: 0, carbs: 2, fat: 10, calories: 90},
+    ],
+  },
+  {
+    key: 'before-bed-recovery',
+    name: 'Before Bed',
+    moment: 'before-bed',
+    time: '9:30 PM',
+    proteinGrams: 25,
+    carbsGrams: 10,
+    fatGrams: 8,
+    calories: 192,
+    foodOptions: [
+      {name: 'Casein protein shake', servings: 1, protein: 25, carbs: 3, fat: 2, calories: 120},
+      {name: 'Almond butter', servings: 1, protein: 6, carbs: 3, fat: 10, calories: 120},
+      {name: 'Cottage cheese', servings: 0.5, protein: 14, carbs: 4, fat: 2, calories: 90},
+    ],
+  },
+];
+
+export const getMealTemplatesByMoment = (moment: string): MealTemplate[] =>
+  mealTemplates.filter(m => m.moment === moment);
