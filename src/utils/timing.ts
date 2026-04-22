@@ -57,12 +57,17 @@ const addMinutes = (timeStr: string, mins: number): string => {
   return `${displayHours}:${String(newMins).padStart(2, '0')} ${newPeriod}`;
 };
 
+// FIX: convert to 24h before comparing
 export const formatTimeOfDay = (timeStr: string): string => {
   const [time, period] = timeStr.split(' ');
-  const [hours] = time.split(':').map(Number);
-  if (hours >= 5 && hours < 12) return 'Morning';
-  if (hours >= 12 && hours < 17) return 'Afternoon';
-  if (hours >= 17 && hours < 21) return 'Evening';
+  const [hours, minutes] = time.split(':').map(Number);
+  const mins = hours * 60 + minutes;
+  const isPM = period === 'PM';
+  // Convert to 24h equivalent
+  const hour24 = isPM && hours !== 12 ? hours + 12 : (!isPM && hours === 12 ? 0 : hours);
+  if (hour24 >= 5 && hour24 < 12) return 'Morning';
+  if (hour24 >= 12 && hour24 < 17) return 'Afternoon';
+  if (hour24 >= 17 && hour24 < 21) return 'Evening';
   return 'Night';
 };
 
